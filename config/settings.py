@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 from decouple import config
 
+import dj_database_url
+DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,7 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', default=True)  # True for local, False for production
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='localhost')
+
+ALLOWED_HOSTS = ['skillhub-7049524add8d.herokuapp.com', '.herokuapp.com']
 
 # Application definition
 DJANGO_APPS = [
