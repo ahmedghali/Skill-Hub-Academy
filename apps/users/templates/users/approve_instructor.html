@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+{% block title %}S.H.A. | التحقق من صحة المدرب{% endblock %}
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">التحقق من صحة المدرب</h2>
+        <p class="text-center">تأكيد التحقق من صحة {{ user.username }} كمدرب ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">تأكيد</button>
+                <a href="{% url 'instructor_requests' %}" class="btn btn-secondary">إلغاء</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

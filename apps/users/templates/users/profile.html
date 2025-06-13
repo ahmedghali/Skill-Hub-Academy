@@ -1,0 +1,259 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 custom_filters cloudinary %} {% block title %}S.H.A. | الملف الشخصي{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">الملف الشخصي</h2>
+        <div class="row">
+            <!-- Barre latérale -->
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        {% if user.profile_image %} {% cloudinary user.profile_image width=100 height=100 crop="fill" class="rounded-circle" alt=user.username %} {% else %}
+                        <img src="https://via.placeholder.com/100?text={{ user.username }}" class="rounded-circle" alt="{{ user.username }}"> {% endif %}
+                        <h5>{{ user.get_full_name|default:user.username }}</h5>
+                        <p>{{ user.get_user_type_display }}</p>
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link mySide" href="#profile">الملف الشخصي</a></li>
+                            {% if user.user_type != 'admin' %}
+                            <li class="nav-item"><a class="nav-link mySide" href="#enrollments">التسجيلات</a></li>
+                            <li class="nav-item"><a class="nav-link mySide" href="#reviews">الآراء</a></li>
+                            <li class="nav-item"><a class="nav-link mySide" href="#suggestions">المقترحات</a></li>
+                            <li class="nav-item"><a class="nav-link mySide" href="#feedbacks">التعليقات</a></li>
+                            {% endif %}
+                            {% if user.user_type == 'admin' %}
+                            <li class="nav-item"><a class="nav-link mySide" href="#admin-enrollments">التسجيلات</a></li>
+                            <li class="nav-item"><a class="nav-link mySide" href="#suggestions">المقترحات</a></li>
+                            <li class="nav-item"><a class="nav-link mySide" href="#admin-feedbacks">التعليقات</a></li>
+                            {% endif %}
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Contenu principal -->
+            <!-- Contenu principal -->
+            <div class="col-md-9">
+                <!-- Profil -->
+                <div id="profile" class="card mb-4">
+                    <div class="card-body">
+                        <h3>الملف الشخصي</h3>
+                        <p><strong>الاسم :</strong> {{ user.get_full_name|default:user.username }}</p>
+                        <p><strong>البريد الإلكتروني :</strong> {{ user.email }}</p>
+                        <p><strong>رقم الهاتف :</strong> {{ user.phone|default:"غير محدد" }}</p>
+                        <p><strong>السيرة الذاتية :</strong> {{ user.bio|default:"غير محددة" }}</p>
+                        <p><strong>تاريخ الميلاد :</strong> {{ user.date_of_birth|date:"d/m/Y"|default:"غير محدد" }}</p>
+                        <p><strong>النوع :</strong> {{ user.get_user_type_display }}</p>
+                        <a href="{% url 'profile_edit' %}" class="btn btn-primary">تعديل الملف الشخصي</a>
+                    </div>
+                </div>
+                <!-- Inscriptions -->
+                <!-- Inscriptions (pour student uniquement) -->
+                <!-- Admin Enrollments Management (pour admin uniquement) -->
+                {% if user.user_type == 'admin' %}
+                <div id="admin-enrollments" class="card mb-4">
+                    <div class="card-body">
+                        <h3>إدارة التسجيلات</h3>
+                        <div class="text-center mb-4">
+                            <a href="{% url 'enrollments:enrollment_list_admin' %}" class="btn btn-gold">عرض التسجيلات</a>
+                        </div>
+                        {% if enrollments %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>الطالب</th>
+                                        <th>الدورة</th>
+                                        <th>الجلسة</th>
+                                        <th>الحالة</th>
+                                        <th>تاريخ الإنشاء</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for enrollment in enrollments %}
+                                    <tr>
+                                        <td>{{ enrollment.user.username }}</td>
+                                        <td>{{ enrollment.course.title }}</td>
+                                        <td>{{ enrollment.session.start_date|date:"d/m/Y" }}</td>
+                                        <td>{{ enrollment.get_status_display }}</td>
+                                        <td>{{ enrollment.created_at|date:"d/m/Y H:i" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if user.user_type == 'student' %}
+                    <div id="enrollments" class="card mb-4">
+                        <div class="card-body">
+                            <h3>التسجيلات</h3>
+                            {% if enrollments %}
+                            {% for enrollment in enrollments %}
+                            <p>{{ enrollment.course.title }} - الجلسة: {{ enrollment.session.start_date|date:"d/m/Y" }} - سجلت في: {{ enrollment.enrolled_at|date:"d/m/Y" }} - الحالة: {{ enrollment.get_status_display }}</p>
+                            {% endfor %}
+                            <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-primary">عرض جميع التسجيلات</a>
+                            {% else %}
+                            <p>لا توجد تسجيلات نشطة.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- Avis -->
+                                <!-- Avis (pour student uniquement) -->
+                {% if user.user_type != 'admin' %}
+                <div id="reviews" class="card mb-4">
+                    <div class="card-body">
+                        <h3>الآراء المقدمة</h3>
+                        {% if reviews %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>الدورة</th>
+                                        <th>التقييم</th>
+                                        <th>التعليق</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for review in reviews %}
+                                    <tr>
+                                        <td>{{ review.course.title }}</td>
+                                        <td>{{ review.rating|multiply_stars:'★' }}</td>
+                                        <td>{{ review.comment|truncatewords:20 }}</td>
+                                        <td>{{ review.created_at|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            <a href="{% url 'reviews:review_update' review.pk %}" class="btn btn-primary btn-sm">تعديل</a>
+                                            <a href="{% url 'reviews:review_delete' review.pk %}" class="btn btn-danger btn-sm">حذف</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p>لم يتم إبداء رأي.</p>
+                        {% endif %}
+                    </div>
+                </div>
+              {% endif %}
+                <!-- Suggestions -->
+                <!-- Suggestions -->
+                <div id="suggestions" class="card mb-4">
+                    <div class="card-body">
+                        <h3>المقترحات</h3>
+                        {% if user.is_authenticated %}
+                        <div class="text-center mb-4">
+                            {% if user.user_type == 'admin' %}
+                            <a href="{% url 'suggestions:admin_suggestion_list' %}" class="btn btn-gold">إقتراحات الأعضاء</a>
+                            {% else %}
+                            <a href="{% url 'suggestions:suggestion_list' %}" class="btn btn-gold">إقتراحاتي</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if suggestions %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>العنوان</th>
+                                        <th>نوع الاقتراح</th>
+                                        <th>الوصف</th>
+                                        <th>الحالة</th>
+                                        <th>ملاحظات المشرف</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for suggestion in suggestions %}
+                                    <tr>
+                                        <td>{{ suggestion.title }}</td>
+                                        <td>{{ suggestion.get_suggestion_type_display }}</td>
+                                        <td>{{ suggestion.description|truncatewords:20 }}</td>
+                                        <td>{{ suggestion.get_status_display }}</td>
+                                        <td>{{ suggestion.admin_notes|default:"لا توجد ملاحظات" }}</td>
+                                        <td>{{ suggestion.created_at|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            {% if suggestion.status == 'pending' %}
+                                            <a href="{% url 'suggestions:suggestion_update' suggestion.pk %}" class="btn btn-primary btn-sm">تعديل</a>
+                                            <a href="{% url 'suggestions:suggestion_delete' suggestion.pk %}" class="btn btn-danger btn-sm">حذف</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                            {% if user.user_type != 'admin' %}
+                                <p>لم يتم تقديم أي اقتراحات.</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Feedbacks -->
+                <!-- Feedbacks -->
+                {% if user.user_type == 'admin' %}
+                <div id="admin-feedbacks" class="text-center card mb-4">
+                    <div class="card-body">
+                        
+                        
+                        <h3>التعليقات</h3>
+                        <div class="text-center mb-4">
+                            <a href="{% url 'feedback:feedback_list' %}" class="btn btn-gold">عرض التعليقات</a>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                {% else %}
+                <div id="feedbacks" class="card mb-4">
+                    <div class="card-body">
+                        <h3>التعليقات</h3>
+                        <div class="text-center mb-4">
+                            <a href="{% url 'feedback:feedback_create' %}" class="btn btn-gold">إضافة تعليق جديد</a>
+                        </div>
+                        {% if feedbacks %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>الموضوع</th>
+                                        <th>النوع</th>
+                                        <th>تم حلها</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for feedback in feedbacks %}
+                                    <tr>
+                                        <td><a href="{% url 'feedback:feedback_detail' feedback.pk %}" class="text-decoration-none">{{ feedback.subject }}</a></td>
+                                        <td>{{ feedback.get_feedback_type_display }}</td>
+                                        <td>{{ feedback.is_resolved|yesno:"نعم,لا" }}</td>
+                                        <td>{{ feedback.created_at|date:"d/m/Y H:i" }}</td>
+                                        <td>
+                                            {% if not feedback.is_validated %}
+                                            <a href="{% url 'feedback:feedback_update' feedback.pk %}" class="btn btn-primary btn-sm">تعديل</a>
+                                            <a href="{% url 'feedback:feedback_delete' feedback.pk %}" class="btn btn-danger btn-sm">حذف</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                            <p>لم يتم وضع أي تعليقات.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+</section>
+{% endblock %}

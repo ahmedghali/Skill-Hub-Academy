@@ -1,0 +1,366 @@
+body {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Tajawal', sans-serif;
+    background-color: #f1f5f9;
+    color: #1f2937;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #1e3a8a;
+    font-weight: 700;
+}
+
+.navbar {
+    background-color: #1e3a8a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff !important;
+    transition: color 0.3s ease;
+    pointer-events: auto !important;
+}
+
+.mySide {
+    color: #060941 !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffd700 !important;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-nav {
+    margin-left: auto !important;
+    margin-right: unset !important;
+}
+
+.dropdown-menu {
+    background-color: #1e3a8a;
+    border: none;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+}
+
+.dropdown-item {
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #ffd700;
+    color: #1e3a8a;
+}
+
+.btn-primary {
+    background-color: #1e3a8a;
+    border-color: #1e3a8a;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background-color: #10327b;
+    border-color: #10327b;
+}
+
+.btn-gold {
+    background-color: #ffd700;
+    color: #1e3a8a;
+    border-color: #ffd700;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+.btn-gold:hover {
+    background-color: #e6c200;
+    border-color: #e6c200;
+}
+
+.btn-outline-light {
+    border-color: #ffffff;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.btn-outline-light:hover {
+    background-color: #ffffff;
+    color: #1e3a8a;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/img/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: #ffffff;
+    padding: 100px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3') no-repeat center center/cover;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-section h2 {
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.text-gold {
+    color: #ffd700 !important;
+}
+
+.courses-section {
+    background-color: #f1f5f9;
+    padding: 30px 0;
+}
+
+.categories-section {
+    background-color: #ffffff;
+    padding: 30px 0;
+}
+
+.reviews-section {
+    background-color: #f1f5f9;
+    padding: 30px 0;
+}
+
+.footer {
+    background-color: #1e3a8a;
+    color: #ffffff;
+    padding: 30px 0;
+}
+
+.footer h5 {
+    color: #ffd700;
+}
+
+.footer a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #ffd700;
+}
+
+.form-control, .card-body {
+    text-align: right;
+}
+
+.alert {
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    display: block !important; /* Assurer la visibilité */
+}
+
+.alert.fade {
+    opacity: 0;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: none;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: none;
+}
+
+.stars {
+    display: inline-block;
+}
+
+.stars::before {
+    content: '★★★★★';
+    color: #d1d5db;
+    font-size: 1.2rem;
+}
+
+.stars[data-rating="1"]::before { content: '★☆☆☆☆'; color: #f59e0b; }
+.stars[data-rating="2"]::before { content: '★★☆☆☆'; color: #f59e0b; }
+.stars[data-rating="3"]::before { content: '★★★☆☆'; color: #f59e0b; }
+.stars[data-rating="4"]::before { content: '★★★★☆'; color: #f59e0b; }
+.stars[data-rating="5"]::before { content: '★★★★★'; color: #f59e0b; }
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: #1e3a8a;
+    border-radius: 50%;
+    padding: 20px;
+}
+
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .hero-section h2 {
+        font-size: 2rem;
+    }
+    .hero-section {
+        padding: 80px 0;
+    }
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+
+
+
+/* Styles pour les pages de catégories */
+.category-section {
+    padding: 60px 0;
+    background-color: #f1f5f9;
+}
+
+.category-section .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.category-section .card:hover {
+    transform: translateY(-5px);
+}
+
+.category-section .card-title a {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+.category-section .card-title a:hover {
+    color: #ffd700;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+
+
+.categories-section .list-group-item {
+    border: none;
+    border-radius: 8px;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.categories-section .list-group-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.categories-section .list-group-item h5 {
+    color: #1e3a8a;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.categories-section .list-group-item .text-muted {
+    font-size: 0.9rem;
+}
+
+.categories-section .btn-outline-primary {
+    color: #1e3a8a;
+    border-color: #1e3a8a;
+}
+
+.categories-section .btn-outline-primary:hover {
+    background-color: #1e3a8a;
+    color: #ffffff;
+}
+
+
+
+
+
+
+/* Styles pour les tableaux */
+.table {
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.table th {
+    background-color: #1e3a8a;
+    color: #ffffff;
+    font-weight: 600;
+}
+.table-hover tbody tr:hover {
+    background-color: #f1f5f9;
+}
+.table .btn-sm {
+    margin-left: 5px;
+}
+

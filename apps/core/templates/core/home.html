@@ -1,0 +1,139 @@
+{% extends './base.html' %}
+{% load static django_bootstrap5 cloudinary %}
+
+{% block title %}S.H.A. | الصفحة الرئيسية{% endblock %}
+
+{% block extra_head %}
+    <meta name="description" content="Skill-Hub-Academy: منصة تعليمية تقدم دورات تدريبية حضورية وعبر الإنترنت لجميع الأعمار والمستويات في ورقلة.">
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container-fluid px-0">
+            <div class="container text-center">
+                <h2>تعلّم، وعلّم، وانمو</h2>
+                <h2 class="text-gold">Skill-Hub-Academy | أكاديمية مركز المهارات</h2>
+                <h2 class="text-gold">ورقلة</h2>
+                <p class="lead">اكتشف الدورات التدريبية حضورياً أو عبر الإنترنت للجميع: الأعمار | المستويات | التخصصات</p>
+                <div class="mt-4">
+                    <a href="{% url 'courses:course_list' %}" class="btn btn-gold btn-lg mx-2">استكشف الدورات</a>
+                    <a href="{% url 'become_instructor' %}" class="btn btn-outline-light btn-lg mx-2">كن مدربًا</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Courses Section -->
+    <section class="courses-section">
+        <div class="container">
+            <h2 class="text-center mb-5">الدورات المميزة</h2>
+            <div class="row">
+                {% for course in featured_courses %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            {% if course.thumbnail %}
+                                {% cloudinary course.thumbnail width=400 height=200 crop="fill" quality="auto" class="card-img-top" alt=course.title %}
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x200?text={{ course.title }}" class="card-img-top" alt="{{ course.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                                <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-primary">تفاصيل الدورة</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-center">لا توجد دورات مميزة حالياً.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">تصفح حسب الفئات</h2>
+            {% if categories %}
+                <ul class="list-group">
+                    {% for category in categories %}
+                        <li class="list-group-item category-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">{{ category.name }}</h5>
+                                <p class="mb-0 text-muted">{{ category.description|truncatewords:10 }}</p>
+                            </div>
+                            <a href="{% url 'courses:category_detail' category.slug %}" class="btn btn-outline-primary btn-sm">استكشف</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-center">لا توجد تصنيفات حالياً.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="text-center mb-5">ما الذي يقوله طلابنا؟</h2>
+            <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for review in recent_reviews %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="card mx-auto" style="max-width: 500px;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ review.course.title }}</h5>
+                                    <p class="card-text">"{{ review.comment|truncatewords:20 }}"</p>
+                                    <p><strong>التقييم:</strong> <span class="stars" data-rating="{{ review.rating }}"></span></p>
+                                    <p><strong>بواسطة:</strong> {{ review.student.username }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center">لا توجد مراجعات متاحة في الوقت الحالي.</p>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Skill-Hub-Academy</h5>
+                    <p>منصة للتعلم والتعليم بلا حدود.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>روابط مهمة</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'about' %}">معلومات عنا</a></li>
+                        <li><a href="{% url 'contact' %}">اتصل بنا</a></li>
+                        <li><a href="{% url 'terms' %}">شروط وأحكام الاستخدام</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>تواصل معنا</h5>
+                    <form action="{% url 'contact' %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="subject" class="form-control mb-2" placeholder="الموضوع">
+                        <textarea name="message" class="form-control mb-2" placeholder="رسالتك" rows="4"></textarea>
+                        <button type="submit" class="btn btn-gold">إرسال</button>
+                    </form>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <p class="text-center mb-0">© 2025 Skill-Hub-Academy. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+{% endblock %}

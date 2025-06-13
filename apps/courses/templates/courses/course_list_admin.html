@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | إدارة الدورات{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">إدارة الدورات</h2>
+        {% if courses %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>العنوان</th>
+                        <th>المدرب</th>
+                        <th>الفئة</th>
+                        <th>نشط</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.title }}</td>
+                        <td>{{ course.instructor.username|default:"غير محدد" }}</td>
+                        <td>{{ course.category.name }}</td>
+                        <td>{{ course.is_active|yesno:"نعم,لا" }}</td>
+                        <td>{{ course.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'courses:course_update_admin' course.slug %}" class="btn btn-primary btn-sm">تعديل</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">لا توجد دورات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

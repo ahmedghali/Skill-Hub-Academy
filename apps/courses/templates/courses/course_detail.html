@@ -1,0 +1,122 @@
+{% extends 'core/base.html' %}
+{% load static django_bootstrap5 cloudinary %}
+
+{% block extra_head %}
+    <meta name="description" content="{{ category.description|truncatewords:160 }}">
+{% endblock %}
+
+{% block title %}S.H.A. | {{ course.title }}{% endblock %}
+
+{% block content %}
+<section class="course-detail-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h2>{{ course.title }}</h2>
+                        <div class="d-flex align-items-center mb-3">
+                            {% if course.thumbnail %}
+                                {% cloudinary course.thumbnail width=600 height=300 crop="fill" class="img-fluid rounded" alt=course.title %}
+                            {% else %}
+                                <img src="https://via.placeholder.com/600x300?text={{ course.title }}" class="img-fluid rounded" alt="{{ course.title }}">
+                            {% endif %}
+                        </div>
+                        <p><strong>الفئة:</strong> {{ course.category.name }}</p>
+                        <p><strong>المدرب:</strong> {{ course.instructor.get_full_name|default:course.instructor.username }}</p>
+                        <p><strong>الوصف:</strong> {{ course.description }}</p>
+                        <p><strong>الأهداف:</strong> {{ course.objectives }}</p>
+                        <p><strong>السعر:</strong> {{ course.price }} د.ج</p>
+                        <p><strong>المدة:</strong> {{ course.duration_hours }} ساعة</p>
+                        <p><strong>الحد الأقصى للمشاركين:</strong> {{ course.max_participants }}</p>
+                        <p><strong>الحد الأدنى للمشاركين:</strong> {{ course.min_participants }}</p>
+                        <p><strong>طريقة التقديم:</strong> {{ course.get_delivery_mode_display }}</p>
+                        <p><strong>الجمهور المستهدف:</strong> {{ course.get_target_audience_display }}</p>
+                        <p><strong>مستوى الصعوبة:</strong> {{ course.get_difficulty_level_display }}</p>
+                        <p><strong>المتطلبات الأساسية:</strong> {{ course.prerequisites|default:"لا يوجد" }}</p>
+                        <p><strong>المواد المطلوبة:</strong> {{ course.required_materials|default:"لا يوجد" }}</p>
+                        {% if course.intro_video %}
+                            <p><strong>فيديو تمهيدي:</strong> <a href="{{ course.intro_video }}" target="_blank">مشاهدة الفيديو</a></p>
+                        {% endif %}
+                        <p><strong>التقييم المتوسط:</strong> {{ course.average_rating|floatformat:1 }} / 5</p>
+                        <p><strong>عدد المسجلين:</strong> {{ course.enrolled_count }}</p>
+                    </div>
+                </div>
+                <!-- Sessions -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h3>الجلسات المقررة</h3>
+                        {% for session in sessions %}
+                            <div class="mb-3">
+                                <p><strong>تاريخ البدء:</strong> {{ session.start_date|date:"d/m/Y H:i" }}</p>
+                                <p><strong>تاريخ الانتهاء:</strong> {{ session.end_date|date:"d/m/Y H:i" }}</p>
+                                {% if session.location %}
+                                    <p><strong>المكان:</strong> {{ session.location }}</p>
+                                {% endif %}
+                                {% if session.meeting_link %}
+                                    <p><strong>رابط الاجتماع:</strong> <a href="{{ session.meeting_link }}" target="_blank">الانضمام</a></p>
+                                {% endif %}
+                                <p><strong>المشاركين الحاليين:</strong> {{ session.current_participants }}</p>
+                                {% if user.user_type == 'instructor' and user == course.instructor %}
+                                    <a href="{% url 'courses:course_session_update' course.pk session.pk %}" class="btn btn-sm btn-primary">تعديل</a>
+                                    <a href="{% url 'courses:course_session_delete' course.pk session.pk %}" class="btn btn-sm btn-danger">حذف</a>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p>لا توجد جلسات مقررة حالياً.</p>
+                        {% endfor %}
+                        {% if user.user_type == 'instructor' and user == course.instructor %}
+                            <a href="{% url 'courses:course_session_create' course.pk %}" class="btn btn-gold">إضافة جلسة</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Projets -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h3>المشاريع المرتبطة</h3>
+                        {% for project in projects %}
+                            <div class="mb-3">
+                                <h5>{{ project.title }}</h5>
+                                <p>{{ project.description }}</p>
+                                {% if project.resources %}
+                                    <p><strong>المصادر:</strong> <a href="{{ project.resources }}" target="_blank">عرض المصادر</a></p>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p>لا توجد مشاريع مرتبطة حالياً.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow sticky-top">
+                    <div class="card-body text-center">
+                        <h4>انضم الآن!</h4>
+                        {% if user.is_authenticated and user.user_type == 'student' %}
+                            {% if sessions %}
+                                <form method="post" action="{% url 'enrollments:enroll' course.pk %}">
+                                    {% csrf_token %}
+                                    <select name="session_pk" class="form-control mb-2">
+                                        {% for session in sessions %}
+                                            <option value="{{ session.pk }}">{{ session.start_date|date:"d/m/Y H:i" }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-gold w-100">التسجيل في الدورة</button>
+                                </form>
+                            {% else %}
+                                <p>لا توجد جلسات متاحة للتسجيل حالياً.</p>
+                            {% endif %}
+                        {% elif not user.is_authenticated %}
+                            <a href="{% url 'login' %}?next={% url 'courses:course_detail' course.pk %}" class="btn btn-gold w-100 mb-2">تسجيل الدخول للتسجيل</a>
+                        {% else %}
+                            <p>التسجيل متاح للطلاب فقط.</p>
+                        {% endif %}
+                        <p><strong>السعر:</strong> {{ course.price }} د.ج</p>
+                        <p><strong>المدة:</strong> {{ course.duration_hours }} ساعة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

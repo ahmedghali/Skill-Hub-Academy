@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | إدارة الاقتراحات{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">إدارة الاقتراحات</h2>
+        {% if suggestions %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>العنوان</th>
+                        <th>المستخدم</th>
+                        <th>نوع الاقتراح</th>
+                        <th>الوصف</th>
+                        <th>الحالة</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for suggestion in suggestions %}
+                    <tr>
+                        <td>{{ suggestion.title }}</td>
+                        <td>{{ suggestion.user.username }}</td>
+                        <td>{{ suggestion.get_suggestion_type_display }}</td>
+                        <td>{{ suggestion.description|truncatewords:20 }}</td>
+                        <td>{{ suggestion.get_status_display }}</td>
+                        <td>{{ suggestion.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'suggestions:suggestion_admin_response' suggestion.pk %}" class="btn btn-primary btn-sm">الرد</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">لا توجد اقتراحات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

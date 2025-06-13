@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% load django_bootstrap5 %}
+{% block title %}S.H.A. | تفاصيل الطلبات{% endblock %}
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">تفاصيل طلب المدرب</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ my_user.username }}</h5>
+                <p class="card-text"><strong>البريد الإلكتروني :</strong> {{ my_user.email }}</p>
+                <p class="card-text"><strong>الاسم :</strong> {{ my_user.first_name }} {{ my_user.last_name }}</p>
+                <p class="card-text"><strong>تاريخ التسجيل :</strong> {{ my_user.date_joined }}</p>
+                <p class="card-text"><strong>الحالة :</strong> طلب المدرب قيد الانتظار</p>
+                
+                <p class="card-text"><strong>التخصصات :</strong> {{ instructor_detail.specializations }}</p>
+                <p class="card-text"><strong>مستوى الخبرة :</strong> {{ instructor_detail.experience_level }}</p>
+                <p class="card-text"><strong>الشهادات :</strong> {{ instructor_detail.certification }}</p>
+                <p class="card-text"><strong>أجر الساعة (د.ج) :</strong> {{ instructor_detail.hourly_rate }}</p>
+
+                <div class="text-center">
+                    <form method="post" action="{% url 'approve_instructor' my_user.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">تأكيد الطلب</button>
+                    </form>
+                    <a href="{% url 'instructor_requests' %}" class="btn btn-secondary mt-2">الرجوع</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

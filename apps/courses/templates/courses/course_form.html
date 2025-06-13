@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% load static django_bootstrap5 %}
+
+{% block title %}S.H.A. | {{ action }} دورة{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">{{ action }} دورة</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in form %}
+                                {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% bootstrap_form form layout='horizontal' %}
+                            <button type="submit" class="btn p-2 btn-gold w-100">{{ action }} حفظ</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'profile_pro' %}" class="btn btn-outline-primary">إلغاء</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

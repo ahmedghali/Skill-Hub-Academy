@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% load static django_bootstrap5 %}
+
+{% block title %}S.H.A. | {{ category.name }}{% endblock %}
+
+{% block content %}
+<section class="py-5 category-section">
+    <div class="container">
+        <h2 class="text-center mb-5">{{ category.name }}</h2>
+        <p class="text-center mb-5">{{ category.description|default:"لا يوجد وصف متاح" }}</p>
+        <h3 class="mb-4">الدورات المرتبطة</h3>
+        {% if courses %}
+            <div class="row">
+                {% for course in courses %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                                <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-primary">عرض الدورة</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">لا توجد دورات مرتبطة بهذه الفئة.</p>
+        {% endif %}
+        <div class="text-center mt-4">
+            <a href="{% url 'courses:category_list' %}" class="btn btn-outline-primary">عودة إلى قائمة الفئات</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

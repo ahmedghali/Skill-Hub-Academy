@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% load static django_bootstrap5 cloudinary %}
+
+{% block title %}S.H.A. | الدورات{% endblock %}
+
+{% block content %}
+<section class="courses-section py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">جميع الدورات</h2>
+        <div class="row">
+            {% for course in courses %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if course.thumbnail %}
+                        <div class="m-1">
+                            {% cloudinary course.thumbnail width=400 height=200 crop="fill" class="card-img-top" alt=course.title %}
+                        </div>
+                        {% else %}
+                            <img src="https://via.placeholder.com/400x200?text={{ course.title }}" class="card-img-top" alt="{{ course.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ course.title }}</h5>
+                            <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                            <p><strong>السعر:</strong> {{ course.price }} د.ج</p>
+                            <p><strong>المدة:</strong> {{ course.duration_hours }} ساعة</p>
+                            <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-primary">تفاصيل الدورة</a>
+                            {% if user.is_authenticated and user.user_type == 'student' %}
+                            <a href="{% url 'reviews:review_create' course.slug %}" class="btn btn-gold btn-sm mt-2">إضافة مراجعة</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">لا توجد دورات متاحة حالياً.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

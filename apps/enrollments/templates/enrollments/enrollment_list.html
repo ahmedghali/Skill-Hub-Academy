@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | التسجيلات{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">التسجيلات</h2>
+        {% if enrollments %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>الدورة</th>
+                        <th>الجلسة</th>
+                        <th>الحالة</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>{{ enrollment.course.title }}</td>
+                        <td>{{ enrollment.session.start_date|date:"d/m/Y" }}</td>
+                        <td>{{ enrollment.get_status_display }}</td>
+                        <td>{{ enrollment.enrolled_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if enrollment.status == 'pending' %}
+                            <a href="{% url 'enrollments:enrollment_update' enrollment.pk %}" class="btn btn-primary btn-sm">تعديل</a>
+                            <a href="{% url 'enrollments:enrollment_delete' enrollment.pk %}" class="btn btn-danger btn-sm">حذف</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">لا توجد تسجيلات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

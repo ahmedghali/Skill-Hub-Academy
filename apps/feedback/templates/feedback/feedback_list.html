@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | التعليقات{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">التعليقات العامة</h2>
+        {% if user.is_authenticated %}
+        <div class="text-center mb-4">
+            <a href="{% url 'feedback:feedback_create' %}" class="btn btn-gold">إضافة تعليق جديد</a>
+        </div>
+        {% endif %} {% if feedbacks %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>الموضوع</th>
+                        <th>نوع التعليق</th>
+                        <th>الرسالة</th>
+                        <th>رد المشرف</th>
+                        <th>تم حلها</th>
+                        <th>تاريخ الإنشاء</th>
+                        {% if user.user_type == 'admin' %}
+                        <th>الإجراءات</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.subject }}</td>
+                        <td>{{ feedback.get_feedback_type_display }}</td>
+                        <td>{{ feedback.message|truncatewords:20 }}</td>
+                        <td>{{ feedback.admin_response|default:"لا يوجد رد" }}</td>
+                        <td>{{ feedback.is_resolved|yesno:"نعم,لا" }}</td>
+                        <td>{{ feedback.created_at|date:"d/m/Y H:i" }}</td>
+                        {% if user.user_type == 'admin' %}
+                        <td>
+                            <a href="{% url 'feedback:feedback_admin_response' feedback.pk %}" class="btn btn-primary btn-sm">الرد</a>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">لا توجد تعليقات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

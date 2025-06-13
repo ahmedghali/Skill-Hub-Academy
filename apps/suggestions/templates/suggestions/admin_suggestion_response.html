@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | {{ title }}{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">{{ title }}</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>تفاصيل الاقتراح</h5>
+                        <p><strong>العنوان:</strong> {{ suggestion.title }}</p>
+                        <p><strong>النوع:</strong> {{ suggestion.get_suggestion_type_display }}</p>
+                        <p><strong>الوصف:</strong> {{ suggestion.description }}</p>
+                        <p><strong>الجمهور المستهدف:</strong> {{ suggestion.target_audience|default:"غير محدد" }}</p>
+                        <p><strong>المدة المقدرة:</strong> {{ suggestion.estimated_duration|default:"غير محدد" }} ساعة</p>
+                        <p><strong>الحد الأقصى للمشاركين:</strong> {{ suggestion.max_participants|default:"غير محدد" }}</p>
+                        <p><strong>نطاق الميزانية:</strong> {{ suggestion.budget_range|default:"غير محدد" }}</p>
+                        <hr>
+                        <form method="post">
+                            {% csrf_token %} {% bootstrap_form form %}
+                            <button type="submit" class="btn btn-gold w-100 mt-3">حفظ</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'suggestions:suggestion_list' %}" class="btn btn-outline-primary">إلغاء</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

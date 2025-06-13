@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | حذف المشروع{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">حذف المشروع: {{ project.title }}</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <p>هل أنت متأكد من حذف المشروع <strong>{{ project.title }}</strong> من الدورة <strong>{{ project.course.title }}</strong>؟</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">تأكيد الحذف</button>
+                            <a href="{% url 'courses:project_list' %}" class="btn btn-outline-primary">إلغاء</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

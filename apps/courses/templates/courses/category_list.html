@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %} 
+{% load static django_bootstrap5 %} 
+{% block title %}S.H.A. | قائمة الفئات{% endblock %} 
+{% block content %}
+<section class="py-5 category-section">
+    <div class="container">
+        <h2 class="text-center mb-5">قائمة الفئات</h2>
+        {% if user.is_authenticated and user.user_type == 'admin' %}
+        <div class="text-center mb-4">
+            <a href="{% url 'courses:category_create' %}" class="btn btn-gold">إضافة فئة جديدة</a>
+        </div>
+        {% endif %} 
+        {% if categories %}
+        <ul class="list-group">
+            {% for category in categories %}
+            <li class="list-group-item category-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">
+                        <a href="{% url 'courses:category_detail' category.slug %}" class="text-decoration-none text-dark">{{ category.name }}</a>
+                    </h5>
+                    <p class="mb-0 text-muted">{{ category.description|truncatewords:10 }}</p>
+                </div>
+                {% if user.is_authenticated and user.user_type == 'admin' %}
+                <div>
+                    <a href="{% url 'courses:category_update' category.slug %}" class="btn btn-primary btn-sm">تعديل</a> 
+                    {% if category.can_delete %}
+                        <a href="{% url 'courses:category_delete' category.slug %}" class="btn btn-danger btn-sm">حذف</a> 
+                    {% endif %}
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-center">لا توجد فئات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

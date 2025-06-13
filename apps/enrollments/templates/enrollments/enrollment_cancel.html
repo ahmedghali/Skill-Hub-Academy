@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% load static django_bootstrap5 %}
+
+{% block title %}S.H.A. | إلغاء التسجيل{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">إلغاء التسجيل</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <p>هل أنت متأكد من إلغاء التسجيل في الدورة <strong>{{ enrollment.course.title }}</strong> لجلسة <strong>{{ enrollment.session.start_date|date:"d/m/Y H:i" }}</strong>؟</p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">إلغاء التسجيل</button>
+                            <a href="{% url 'enrollments:enrollment_list' %}" class="btn btn-secondary">رجوع</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

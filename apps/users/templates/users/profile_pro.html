@@ -1,0 +1,129 @@
+{% extends 'core/base.html' %}
+{% load static django_bootstrap5 cloudinary %}
+
+{% block title %}S.H.A. | الملف المهني{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">الملف المهني</h2>
+        <div class="row">
+            <!-- Barre latérale -->
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" class="rounded-circle mb-3" style="width: 100px;" alt="Photo de profil">
+                        {% else %}
+                            <img src="{% static 'images/default_profile.png' %}" class="rounded-circle mb-3" style="width: 100px;" alt="Photo par défaut">
+                        {% endif %}
+                        <h5>{{ user.get_full_name|default:user.username }}</h5>
+                        <p>مدرب</p>
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link mySide" href="#instructor">الملف المهني</a></li>
+                            <li class="nav-item"><a class="nav-link mySide" href="#courses">الدورات</a></li>
+                            {% if user.user_type == 'instructor' %}
+                            <li class="nav-item"><a class="nav-link mySide" href="#projects">المشاريع</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Contenu principal -->
+            <div class="col-md-9">
+                <!-- Profil professionnel -->
+                <div id="instructor" class="card mb-3">
+                    <div class="card-body">
+                        <h3>الملف المهني</h3>
+                        {% if instructor_profile %}
+                            <p><strong>التخصصات :</strong> {{ instructor_profile.specializations }}</p>
+                            <p><strong>مستوى الخبرة :</strong> {{ instructor_profile.get_experience_level_display }}</p>
+                            <p><strong>الشهادات :</strong> {{ instructor_profile.certification|default:"لا يوجد" }}</p>
+                            <p><strong>أجر الساعة :</strong> {{ instructor_profile.hourly_rate|default:"غير محدد" }} د.ج</p>
+                            <p><strong>تم التحقق :</strong> {{ instructor_profile.is_verified|yesno:"نعم,لا" }}</p>
+                        {% else %}
+                            <p>لم يتم إنشاء ملف مهني بعد.</p>
+                        {% endif %}
+                        <a href="{% url 'profile_pro_edit' %}" class="btn btn-primary">تعديل الملف المهني</a>
+                    </div>
+                </div>
+                <!-- Cours -->
+                <div id="courses" class="card mb-3">
+                    <div class="card-body">
+                        <h3>الدورات التي أنشأتها</h3>
+                        <div class="text-center mb-4">
+
+                            <a href="{% url 'courses:course_create' %}" class="btn btn-gold mb-3">إضافة دورة جديدة</a>
+                        </div>
+                        {% for course in courses_taught %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        {% if course.thumbnail %}
+                                            {% cloudinary course.thumbnail width=100 height=100 crop="fill" class="me-3" alt=course.title %}
+                                        {% else %}
+                                            <img src="https://via.placeholder.com/100x100?text={{ course.title }}" class="me-3" alt="{{ course.title }}">
+                                        {% endif %}
+                                        <div>
+                                            <h5>{{ course.title }}</h5>
+                                            <p><strong>الفئة:</strong> {{ course.category.name }}</p>
+                                            <p><strong>السعر:</strong> {{ course.price }} د.ج</p>
+                                            <p><strong>المدة:</strong> {{ course.duration_hours }} ساعة</p>
+                                            <p><strong>مستوى الصعوبة:</strong> {{ course.get_difficulty_level_display }}</p>
+                                            <p>{{ course.description|truncatewords:20 }}</p>
+                                            <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-sm btn-info">عرض التفاصيل</a>
+                                            <a href="{% url 'courses:course_session_create' course.id %}" class="btn btn-sm btn-secondary">إضافة جلسة</a>
+                                            <a href="{% url 'courses:course_update' course.pk %}" class="btn btn-sm btn-primary">تعديل</a>
+                                            <a href="{% url 'courses:course_delete' course.pk %}" class="btn btn-sm btn-danger">حذف</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>لا توجد دورات حالياً.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Projects (pour instructor uniquement) -->
+                {% if user.user_type == 'instructor' %}
+                <div id="projects" class="card mb-4">
+                    <div class="card-body">
+                        <h3>المشاريع</h3>
+                        <div class="text-center mb-4">
+                            <a href="{% url 'courses:project_list' %}" class="btn btn-gold">عرض المشاريع</a>
+                        </div>
+                        {% if projects %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>الدورة</th>
+                                        <th>العنوان</th>
+                                        <th>الوصف</th>
+                                        <th>الترتيب</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for project in projects %}
+                                    <tr>
+                                        <td>{{ project.course.title }}</td>
+                                        <td>{{ project.title }}</td>
+                                        <td>{{ project.description|truncatewords:20 }}</td>
+                                        <td>{{ project.order }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p>لم يتم إضافة أي مشاريع.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

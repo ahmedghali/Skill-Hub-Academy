@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | إدارة التسجيلات{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">إدارة التسجيلات</h2>
+        {% if enrollments %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>الطالب</th>
+                        <th>الدورة</th>
+                        <th>الجلسة</th>
+                        <th>الحالة</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>{{ enrollment.user.username }}</td>
+                        <td>{{ enrollment.course.title }}</td>
+                        <td>{{ enrollment.session.start_date|date:"d/m/Y" }}</td>
+                        <td>{{ enrollment.get_status_display }}</td>
+                        <td>{{ enrollment.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'enrollments:enrollment_update_admin' enrollment.pk %}" class="btn btn-primary btn-sm">تعديل</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">لا توجد تسجيلات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

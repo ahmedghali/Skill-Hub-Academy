@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | {{ title }}{% endblock %} {% block content %}
+<section class="py-5 category-section">
+    <div class="container">
+        <h2 class="text-center mb-5">{{ title }} - {{ course.title }}</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %} {% bootstrap_form form %}
+                            <button type="submit" class="btn btn-gold w-100 mt-3">حفظ</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-primary">إلغاء</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

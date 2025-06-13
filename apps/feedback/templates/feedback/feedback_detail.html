@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | تفاصيل التعليق{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">تفاصيل التعليق</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ feedback.subject }}</h5>
+                        <p><strong>النوع:</strong> {{ feedback.get_feedback_type_display }}</p>
+                        <p><strong>الرسالة:</strong> {{ feedback.message }}</p>
+                        <p><strong>رد المشرف:</strong> {{ feedback.admin_response|default:"لا يوجد رد" }}</p>
+                        <p><strong>تم حلها:</strong> {{ feedback.is_resolved|yesno:"نعم,لا" }}</p>
+                        <p><strong>تاريخ الإنشاء:</strong> {{ feedback.created_at|date:"d/m/Y H:i" }}</p>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-primary">العودة إلى الملف الشخصي</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

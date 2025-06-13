@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | تعديل التسجيل{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">تعديل التسجيل</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>تفاصيل التسجيل</h5>
+                        <p><strong>الطالب:</strong> {{ enrollment.user.username }}</p>
+                        <p><strong>الدورة:</strong> {{ enrollment.course.title }}</p>
+                        <p><strong>الجلسة:</strong> {{ enrollment.session.start_date|date:"d/m/Y" }}</p>
+                        <hr>
+                        <form method="post">
+                            {% csrf_token %} {% bootstrap_form form %}
+                            <button type="submit" class="btn btn-gold w-100 mt-3">حفظ</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'enrollments:enrollment_list_admin' %}" class="btn btn-outline-primary">إلغاء</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

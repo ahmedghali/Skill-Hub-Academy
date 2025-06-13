@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %} {% load static django_bootstrap5 %} {% block title %}S.H.A. | اقتراحات الدورات{% endblock %} {% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">اقتراحات الدورات التدريبية</h2>
+        {% if user.is_authenticated %}
+        <div class="text-center mb-4">
+            <a href="{% url 'suggestions:suggestion_create' %}" class="btn btn-gold">إضافة اقتراح جديد</a>
+        </div>
+        {% endif %}
+        {% if suggestions %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>العنوان</th>
+                        <th>نوع الاقتراح</th>
+                        <th>الوصف</th>
+                        <th>الحالة</th>
+                        <th>ملاحظات المشرف</th>
+                        <th>تاريخ الإنشاء</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for suggestion in suggestions %}
+                    <tr>
+                        <td>{{ suggestion.title }}</td>
+                        <td>{{ suggestion.get_suggestion_type_display }}</td>
+                        <td>{{ suggestion.description|truncatewords:20 }}</td>
+                        <td>{{ suggestion.get_status_display }}</td>
+                        <td>{{ suggestion.admin_notes|default:"لا توجد ملاحظات" }}</td>
+                        <td>{{ suggestion.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if user.user_type == 'admin' %}
+                            <a href="{% url 'suggestions:suggestion_admin_response' suggestion.pk %}" class="btn btn-primary btn-sm">الرد</a>
+                            {% else %}
+                            <a href="{% url 'suggestions:suggestion_update' suggestion.pk %}" class="btn btn-primary btn-sm">تعديل</a>
+                            <a href="{% url 'suggestions:suggestion_delete' suggestion.pk %}" class="btn btn-danger btn-sm">حذف</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">لا توجد اقتراحات متاحة حالياً.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

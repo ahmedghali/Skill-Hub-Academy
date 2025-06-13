@@ -1,0 +1,32 @@
+{% extends './base.html' %}
+{% load static django_bootstrap5 %}
+
+{% block title %}S.H.A. | تواصل معنا{% endblock %}
+
+{% block content %}
+    <section class="py-4">
+        <div class="container">
+            <h2 class="text-center mb-4">تواصل معنا</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <form action="{% url 'contact' %}" method="post">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">الموضوع</label>
+                                    <input type="text" name="subject" id="subject" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">رسالتك</label>
+                                    <textarea name="message" id="message" class="form-control" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-gold w-100">إرسال</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
