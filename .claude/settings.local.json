@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(if exist db.sqlite3 echo \"db.sqlite3 exists\")",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"D:\\\\PROJETCS\\\\E-Learning\\\\Skill-Hub-Academy\\\\cleanup.ps1\")"
+    ]
+  }
+}
