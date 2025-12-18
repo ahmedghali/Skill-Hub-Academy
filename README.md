@@ -215,6 +215,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+## Contact
+
+**Ahmed Ghali** - Full-Stack Django Developer
+
+- LinkedIn: [linkedin.com/in/ghali-ahmed](https://www.linkedin.com/in/ghali-ahmed/)
+- GitHub: [github.com/ahmedghali](https://github.com/ahmedghali)
+
+---
+
 ## Acknowledgments
 
 - Django Documentation
