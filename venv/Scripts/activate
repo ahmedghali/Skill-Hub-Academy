@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\--- DJANGO\E-Learning\Skill-Hub-Academy\venv"
+VIRTUAL_ENV="D:\PROJETCS\E-Learning\Skill-Hub-Academy\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
